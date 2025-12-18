@@ -182,7 +182,8 @@ export default function ReactiveBackground() {
           const titleElement = document.getElementById("nextis-title");
           if (titleElement) {
             const rect = titleElement.getBoundingClientRect();
-            const cushionBuffer = 10;
+            // Scale the cushion buffer with the screen size so it stays tight to the text
+            const cushionBuffer = 10 * screenScale;
 
             if (drawX > rect.left - cushionBuffer &&
               drawX < rect.right + cushionBuffer &&
