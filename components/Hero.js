@@ -22,10 +22,10 @@ export default function Hero() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="max-w-4xl mx-auto"
             >
-                <h1 id="nextis-title" className="text-6xl md:text-8xl font-bold tracking-tight text-gray-900 mb-6">
+                <h1 id="nextis-title" className="font-bold tracking-tight text-gray-900 mb-6" style={{ fontSize: 'clamp(3rem, 2.5vw, 6rem)' }}>
                     Nextis
                 </h1>
-                <p className="text-xl md:text-2xl text-gray-600 font-light mb-10 max-w-2xl mx-auto leading-relaxed">
+                <p className="text-gray-600 font-light mb-10 max-w-2xl mx-auto leading-relaxed" style={{ fontSize: 'clamp(1rem, 0.7vw, 1.5rem)' }}>
                     {t.hero.title} <br />
                     <span className="font-medium text-gray-900">{t.hero.subtitle}</span>
                 </p>

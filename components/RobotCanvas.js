@@ -95,35 +95,35 @@ export default function RobotCanvas({ onClose }) {
       <Loader />
 
       <div className="absolute top-1/3 left-1/3 -translate-y-1/2 z-40 pointer-events-none">
-        <div className="space-y-10 text-gray-900">
+        <div className="space-y-6 md:space-y-10 text-gray-900">
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.dof}</h3>
-            <p className="text-5xl font-light">7 DoF</p>
+            <h3 className="uppercase tracking-widest text-gray-500 mb-2" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.dof}</h3>
+            <p className="font-light" style={{ fontSize: 'clamp(1.5rem, 1.3vw, 3rem)' }}>7 DoF</p>
           </div>
 
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.payload}</h3>
+            <h3 className="uppercase tracking-widest text-gray-500 mb-2" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.payload}</h3>
             <div className="flex gap-10">
               <div>
-                <p className="text-4xl font-light">6 kg</p>
-                <span className="text-sm text-gray-500">{t.robot.peak}</span>
+                <p className="font-light" style={{ fontSize: 'clamp(1.25rem, 1vw, 2.25rem)' }}>6 kg</p>
+                <span className="text-gray-500" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 0.875rem)' }}>{t.robot.peak}</span>
               </div>
               <div>
-                <p className="text-4xl font-light">3 kg</p>
-                <span className="text-sm text-gray-500">{t.robot.rated}</span>
+                <p className="font-light" style={{ fontSize: 'clamp(1.25rem, 1vw, 2.25rem)' }}>3 kg</p>
+                <span className="text-gray-500" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 0.875rem)' }}>{t.robot.rated}</span>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.reach}</h3>
-            <p className="text-4xl font-light">700 mm</p>
+            <h3 className="uppercase tracking-widest text-gray-500 mb-2" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.reach}</h3>
+            <p className="font-light" style={{ fontSize: 'clamp(1.25rem, 1vw, 2.25rem)' }}>700 mm</p>
           </div>
 
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.gripper}</h3>
-            <p className="text-2xl font-light mb-1">{t.robot.gripperType}</p>
-            <p className="text-base text-gray-600">{t.robot.gripperDetails}</p>
+            <h3 className="uppercase tracking-widest text-gray-500 mb-2" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.gripper}</h3>
+            <p className="font-light mb-1" style={{ fontSize: 'clamp(1rem, 0.8vw, 1.5rem)' }}>{t.robot.gripperType}</p>
+            <p className="text-gray-600" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.gripperDetails}</p>
           </div>
         </div>
       </div>
