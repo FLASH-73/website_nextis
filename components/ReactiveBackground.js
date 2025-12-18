@@ -105,7 +105,8 @@ export default function ReactiveBackground() {
           // Global Lung Expansion applied to spotlight size as well
           const lungExpansion = lungBreath * (150 * screenScale);
 
-          const fadeRadius = (700 * screenScale) + shapeMod + radiusBreath + lungExpansion;
+          // Increased Spotlight Size
+          const fadeRadius = (1000 * screenScale) + shapeMod + radiusBreath + lungExpansion;
           const cullRadius = fadeRadius + 100;
 
           if (distRaw > cullRadius) continue;
@@ -138,11 +139,13 @@ export default function ReactiveBackground() {
             repulsionShapeMod += Math.sin(repulsionAngle * 7 - time * 1.5) * (15 * screenScale);
 
             // Base repulsion radius (the "empty" zone size)
-            const baseRepulsionRadius = (100 * screenScale) + lungBreath * (20 * screenScale);
+            // Increased to 180 for larger empty space
+            const baseRepulsionRadius = (180 * screenScale) + lungBreath * (20 * screenScale);
             const effectiveRepulsionRadius = baseRepulsionRadius + repulsionShapeMod;
 
             // Repulsion Falloff Limit
-            const repulsionOuterRadius = 500 * screenScale;
+            // Increased to 800 for larger influence area
+            const repulsionOuterRadius = 800 * screenScale; 
 
             // Calculate force
             let force = 0;
@@ -164,7 +167,8 @@ export default function ReactiveBackground() {
             const angle = Math.atan2(dy, dx) + angleNoise;
 
             // Smooth but strong displacement
-            const moveDistance = force * (300 * screenScale);
+            // Increased to 500 for stronger push
+            const moveDistance = force * (500 * screenScale);
 
             if (moveDistance > 0) {
               drawX -= Math.cos(angle) * moveDistance;
@@ -183,7 +187,8 @@ export default function ReactiveBackground() {
           if (titleElement) {
             const rect = titleElement.getBoundingClientRect();
             // Scale the cushion buffer with the screen size so it stays tight to the text
-            const cushionBuffer = 10 * screenScale;
+            // Reduced to 2 for tighter fit
+            const cushionBuffer = 2 * screenScale;
 
             if (drawX > rect.left - cushionBuffer &&
               drawX < rect.right + cushionBuffer &&
