@@ -28,12 +28,19 @@ export default function ReactiveBackground() {
       targetMouseY = e.clientY;
     };
 
+    const handleTouchMove = (e) => {
+      if (e.touches.length > 0) {
+        targetMouseX = e.touches[0].clientX;
+        targetMouseY = e.touches[0].clientY;
+      }
+    };
+
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchstart", handleTouchMove);
 
     handleResize();
-
-    const baseRadius = 2.5;
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -45,41 +52,39 @@ export default function ReactiveBackground() {
       const time = Date.now() * 0.001;
 
       // Global Lung Breathing - Center-out expansion
-      // The whole grid expands and contracts from the center
       const lungBreath = Math.sin(time * 1.5); // -1 to 1
-      // DRASTIC EXPANSION: +/- 20% scale change
       const expansionScale = 1.0 + lungBreath * 0.2;
 
-      // Base grid parameters
-      const baseSpacing = 50;
+      // Responsive scaling: Adjust spacing based on screen width
+      // Base reference width is 3840px (4K). 
+      // We scale down for smaller screens to maintain the "zoomed out" look (same density).
+      // We clamp the scale at 0.4 to ensure dots don't become too small on mobile.
+      const screenScale = Math.max(0.4, canvas.width / 3840);
+      const baseSpacing = 50 * screenScale;
+      const baseRadius = 2.5 * screenScale;
 
       // Ensure we cover the screen even when contracted (scale < 1)
-      // We divide by the minimum scale (0.8) to ensure we generate enough dots to cover the edges when shrunk
-      // Add extra buffer rows/cols to be safe
       const cols = Math.ceil(canvas.width / (baseSpacing * 0.8)) + 6;
       const rows = Math.ceil(canvas.height / (baseSpacing * 0.8)) + 6;
 
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
 
-      // Bright blue, light tone, easy on eyes
       ctx.fillStyle = "rgba(0, 0, 0, 1)"; // Turquoise
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
           // Calculate base position (centered grid)
-          // Offset by -3 to handle the extra buffer rows/cols and center alignment
           const baseX = (i - 3) * baseSpacing + baseSpacing / 2;
           const baseY = (j - 3) * baseSpacing + baseSpacing / 2;
 
           // Apply Global Breathing (Expansion from center)
-          // This moves dots apart/together without changing their count
-          // We calculate the offset from center and scale it
           let x = centerX + (baseX - centerX) * expansionScale;
           let y = centerY + (baseY - centerY) * expansionScale;
 
+          // ... (rest of the logic uses x, y, and scaled radius)
+
           // Calculate distance to mouse first to implement "Spotlight"
-          // Only render dots within a certain radius
           const dxRaw = currentMouseX - x;
           const dyRaw = currentMouseY - y;
           const distRaw = Math.sqrt(dxRaw * dxRaw + dyRaw * dyRaw);
@@ -89,32 +94,32 @@ export default function ReactiveBackground() {
 
           // Complex Organic Morphing for OUTER Spotlight
           let shapeMod = 0;
-          shapeMod += Math.cos(angleToMouse * 2 + time * 0.5) * 60;
-          shapeMod += Math.sin(angleToMouse * 3 - time * 0.8) * 50;
-          shapeMod += Math.cos(angleToMouse * 5 + time * 1.5) * 30;
-          shapeMod += Math.sin(angleToMouse * 7 - time * 2.0) * 15;
+          shapeMod += Math.cos(angleToMouse * 2 + time * 0.5) * (60 * screenScale);
+          shapeMod += Math.sin(angleToMouse * 3 - time * 0.8) * (50 * screenScale);
+          shapeMod += Math.cos(angleToMouse * 5 + time * 1.5) * (30 * screenScale);
+          shapeMod += Math.sin(angleToMouse * 7 - time * 2.0) * (15 * screenScale);
 
           // Breathing radius global
-          const radiusBreath = Math.sin(time * 1.5) * 40;
+          const radiusBreath = Math.sin(time * 1.5) * (40 * screenScale);
 
           // Global Lung Expansion applied to spotlight size as well
-          const lungExpansion = lungBreath * 150;
+          const lungExpansion = lungBreath * (150 * screenScale);
 
-          const fadeRadius = 700 + shapeMod + radiusBreath + lungExpansion;
+          const fadeRadius = (700 * screenScale) + shapeMod + radiusBreath + lungExpansion;
           const cullRadius = fadeRadius + 100;
 
           if (distRaw > cullRadius) continue;
 
           // Heavy, Organic Breathing - NATURAL & ALIVE
           const t = time * 0.6;
-          const noiseX = Math.sin(t + y * 0.05 + x * 0.01) * 20 + Math.cos(t * 0.3 + x * 0.02) * 15;
-          const noiseY = Math.cos(t + x * 0.05 + y * 0.01) * 20 + Math.sin(t * 0.4 + y * 0.02) * 15;
+          const noiseX = Math.sin(t + y * 0.05 + x * 0.01) * (20 * screenScale) + Math.cos(t * 0.3 + x * 0.02) * (15 * screenScale);
+          const noiseY = Math.cos(t + x * 0.05 + y * 0.01) * (20 * screenScale) + Math.sin(t * 0.4 + y * 0.02) * (15 * screenScale);
 
           let drawX = x + noiseX;
           let drawY = y + noiseY;
 
           const breath = Math.sin(t * 3.0 + x * 0.005 + y * 0.005) * 0.5 + 0.5;
-          let radius = baseRadius + breath * 3;
+          let radius = baseRadius + breath * (3 * screenScale);
 
           // Recalculate distance for interaction based on the moved position
           const dx = currentMouseX - drawX;
@@ -128,17 +133,16 @@ export default function ReactiveBackground() {
             const repulsionAngle = Math.atan2(dy, dx);
 
             let repulsionShapeMod = 0;
-            repulsionShapeMod += Math.sin(time * 3.0) * 20;
-            repulsionShapeMod += Math.cos(repulsionAngle * 3 + time * 2.0) * 30;
-            repulsionShapeMod += Math.sin(repulsionAngle * 7 - time * 1.5) * 15;
+            repulsionShapeMod += Math.sin(time * 3.0) * (20 * screenScale);
+            repulsionShapeMod += Math.cos(repulsionAngle * 3 + time * 2.0) * (30 * screenScale);
+            repulsionShapeMod += Math.sin(repulsionAngle * 7 - time * 1.5) * (15 * screenScale);
 
             // Base repulsion radius (the "empty" zone size)
-            // Increased to 80 (Middle ground)
-            const baseRepulsionRadius = 100 + lungBreath * 20;
+            const baseRepulsionRadius = (100 * screenScale) + lungBreath * (20 * screenScale);
             const effectiveRepulsionRadius = baseRepulsionRadius + repulsionShapeMod;
 
             // Repulsion Falloff Limit
-            const repulsionOuterRadius = 500; // Force drops to 0 at 400px
+            const repulsionOuterRadius = 500 * screenScale;
 
             // Calculate force
             let force = 0;
@@ -160,8 +164,7 @@ export default function ReactiveBackground() {
             const angle = Math.atan2(dy, dx) + angleNoise;
 
             // Smooth but strong displacement
-            // Increased to 300 (Middle ground)
-            const moveDistance = force * 300;
+            const moveDistance = force * (300 * screenScale);
 
             if (moveDistance > 0) {
               drawX -= Math.cos(angle) * moveDistance;
@@ -220,6 +223,8 @@ export default function ReactiveBackground() {
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchstart", handleTouchMove);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);

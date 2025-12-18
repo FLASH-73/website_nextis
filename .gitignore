@@ -40,5 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 public/models/*.obj
-public/models/*.glb
 public/models/*.mtl
