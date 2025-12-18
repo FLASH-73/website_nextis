@@ -13,13 +13,43 @@ export default function Contact() {
                     {t.contact.subtitle}
                 </p>
 
-                <form className="max-w-md mx-auto flex gap-2" onSubmit={(e) => e.preventDefault()}>
+                <form
+                    className="max-w-md mx-auto flex gap-2"
+                    onSubmit={async (e) => {
+                        e.preventDefault();
+                        const email = e.target.email.value;
+                        const button = e.target.querySelector('button');
+                        const originalText = button.innerText;
+
+                        try {
+                            button.innerText = "Joining...";
+                            const res = await fetch('/api/waitlist', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ email })
+                            });
+                            if (res.ok) {
+                                alert("Thanks! We'll be in touch.");
+                                e.target.reset();
+                            } else {
+                                alert("Something went wrong.");
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert("Error joining waitlist");
+                        } finally {
+                            button.innerText = originalText;
+                        }
+                    }}
+                >
                     <input
                         type="email"
+                        name="email"
+                        required
                         placeholder={t.contact.emailPlaceholder}
                         className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     />
-                    <button className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors">
+                    <button type="submit" className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors">
                         {t.contact.join}
                     </button>
                 </form>

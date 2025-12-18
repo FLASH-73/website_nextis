@@ -5,6 +5,7 @@ export const translations = {
             subtitle: "AI-enabled robotic arms for assembly, sorting, and beyond.",
             discover: "Discover the Arm",
             watch: "Watch Demo",
+            waitlistMessage: "Working hard on it. Join waitlist to be the first who knows.",
         },
         about: {
             title: "Our Mission",
@@ -35,6 +36,7 @@ export const translations = {
             subtitle: "KI-gestützte Roboterarme für Montage, Sortierung und mehr.",
             discover: "Entdecke den Arm",
             watch: "Demo ansehen",
+            waitlistMessage: "Wir arbeiten hart daran. Melden Sie sich für die Warteliste an, um als Erster davon zu erfahren.",
         },
         about: {
             title: "Unsere Mission",
