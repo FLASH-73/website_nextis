@@ -2,14 +2,23 @@
 
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stage, Center, Loader, useGLTF } from "@react-three/drei";
-import { Suspense, useLayoutEffect } from "react";
+import { Suspense, useLayoutEffect, useMemo } from "react";
 import * as THREE from "three";
+
+import { useLanguage } from "@/contexts/LanguageContext";
+import { SkeletonUtils } from "three-stdlib";
 
 function Model() {
   const { scene } = useGLTF("/models/con_one.glb");
 
+  // Clone the scene to avoid mutating the global cache
+  // We use useMemo to only clone when the base scene changes
+  const clonedScene = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+
   useLayoutEffect(() => {
-    scene.traverse((child) => {
+    const createdMaterials = [];
+
+    clonedScene.traverse((child) => {
       if (child.isMesh) {
         // The GLB likely has PBR materials already, but we want to enforce our specific look
         // especially for the "Aluminum" vs "Plastic" distinction.
@@ -40,17 +49,26 @@ function Model() {
         child.material = newMat;
         child.castShadow = true;
         child.receiveShadow = true;
+
+        createdMaterials.push(newMat);
       }
     });
-  }, [scene]);
+
+    // Cleanup: Dispose of the materials we created when the component unmounts
+    return () => {
+      createdMaterials.forEach(mat => mat.dispose());
+    };
+  }, [clonedScene]);
 
   // GLTF is usually Y-up, so we likely don't need the rotation anymore.
-  return <primitive object={scene} />;
+  return <primitive object={clonedScene} />;
 }
 
 useGLTF.preload("/models/con_one.glb");
 
 export default function RobotCanvas({ onClose }) {
+  const { t } = useLanguage();
+
   return (
     <div className="fixed inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center">
       <div className="absolute top-8 right-8 z-50">
@@ -58,7 +76,7 @@ export default function RobotCanvas({ onClose }) {
           onClick={onClose}
           className="px-6 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-all"
         >
-          Close Interaction
+          {t.robot.close}
         </button>
       </div>
 
@@ -79,40 +97,40 @@ export default function RobotCanvas({ onClose }) {
       <div className="absolute top-1/3 left-1/3 -translate-y-1/2 z-40 pointer-events-none">
         <div className="space-y-10 text-gray-900">
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">Degrees of Freedom</h3>
+            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.dof}</h3>
             <p className="text-5xl font-light">7 DoF</p>
           </div>
 
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">Payload</h3>
+            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.payload}</h3>
             <div className="flex gap-10">
               <div>
                 <p className="text-4xl font-light">6 kg</p>
-                <span className="text-sm text-gray-500">Peak</span>
+                <span className="text-sm text-gray-500">{t.robot.peak}</span>
               </div>
               <div>
                 <p className="text-4xl font-light">3 kg</p>
-                <span className="text-sm text-gray-500">Rated</span>
+                <span className="text-sm text-gray-500">{t.robot.rated}</span>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">Reach</h3>
+            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.reach}</h3>
             <p className="text-4xl font-light">700 mm</p>
           </div>
 
           <div>
-            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">Gripper</h3>
-            <p className="text-2xl font-light mb-1">Adaptive Soft Gripper</p>
-            <p className="text-base text-gray-600">Visual feedback • 90mm span</p>
+            <h3 className="text-base uppercase tracking-widest text-gray-500 mb-2">{t.robot.gripper}</h3>
+            <p className="text-2xl font-light mb-1">{t.robot.gripperType}</p>
+            <p className="text-base text-gray-600">{t.robot.gripperDetails}</p>
           </div>
         </div>
       </div>
 
       <div className="absolute bottom-12 text-center pointer-events-none w-full">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Nextis Arm One</h2>
-        <p className="text-gray-600">Drag to rotate view • Scroll to zoom</p>
+        <p className="text-gray-600">{t.robot.controls}</p>
       </div>
     </div>
   );
