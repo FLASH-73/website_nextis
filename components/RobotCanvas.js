@@ -70,7 +70,7 @@ export default function RobotCanvas({ onClose }) {
   const { t } = useLanguage();
 
   return (
-    <div className="fixed inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center">
+    <div className="fixed inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center font-original">
       <div className="absolute top-8 right-8 z-50">
         <button
           onClick={onClose}

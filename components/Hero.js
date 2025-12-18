@@ -22,7 +22,7 @@ export default function Hero() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="max-w-4xl mx-auto"
             >
-                <h1 id="nextis-title" className="font-bold tracking-tight text-gray-900 mb-6" style={{ fontSize: 'clamp(3rem, 2.5vw, 6rem)' }}>
+                <h1 id="nextis-title" className="font-sans font-light tracking-tighter leading-none text-gray-900 mb-6" style={{ fontSize: 'clamp(3rem, 2.5vw, 6rem)' }}>
                     Nextis
                 </h1>
                 <p className="text-gray-600 font-light mb-10 max-w-2xl mx-auto leading-relaxed" style={{ fontSize: 'clamp(1rem, 0.7vw, 1.5rem)' }}>
