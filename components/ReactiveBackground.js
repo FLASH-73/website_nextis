@@ -1,0 +1,233 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
+export default function ReactiveBackground() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    let animationFrameId;
+
+    // Mouse state
+    let targetMouseX = -1000;
+    let targetMouseY = -1000;
+    let currentMouseX = -1000;
+    let currentMouseY = -1000;
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    const handleMouseMove = (e) => {
+      targetMouseX = e.clientX;
+      targetMouseY = e.clientY;
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    handleResize();
+
+    const baseRadius = 2.5;
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Inertia: Smoothly interpolate current mouse pos towards target
+      currentMouseX += (targetMouseX - currentMouseX) * 0.04;
+      currentMouseY += (targetMouseY - currentMouseY) * 0.04;
+
+      const time = Date.now() * 0.001;
+
+      // Global Lung Breathing - Center-out expansion
+      // The whole grid expands and contracts from the center
+      const lungBreath = Math.sin(time * 1.5); // -1 to 1
+      // DRASTIC EXPANSION: +/- 20% scale change
+      const expansionScale = 1.0 + lungBreath * 0.2;
+
+      // Base grid parameters
+      const baseSpacing = 50;
+
+      // Ensure we cover the screen even when contracted (scale < 1)
+      // We divide by the minimum scale (0.8) to ensure we generate enough dots to cover the edges when shrunk
+      // Add extra buffer rows/cols to be safe
+      const cols = Math.ceil(canvas.width / (baseSpacing * 0.8)) + 6;
+      const rows = Math.ceil(canvas.height / (baseSpacing * 0.8)) + 6;
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      // Bright blue, light tone, easy on eyes
+      ctx.fillStyle = "rgba(0, 0, 0, 1)"; // Turquoise
+
+      for (let i = 0; i < cols; i++) {
+        for (let j = 0; j < rows; j++) {
+          // Calculate base position (centered grid)
+          // Offset by -3 to handle the extra buffer rows/cols and center alignment
+          const baseX = (i - 3) * baseSpacing + baseSpacing / 2;
+          const baseY = (j - 3) * baseSpacing + baseSpacing / 2;
+
+          // Apply Global Breathing (Expansion from center)
+          // This moves dots apart/together without changing their count
+          // We calculate the offset from center and scale it
+          let x = centerX + (baseX - centerX) * expansionScale;
+          let y = centerY + (baseY - centerY) * expansionScale;
+
+          // Calculate distance to mouse first to implement "Spotlight"
+          // Only render dots within a certain radius
+          const dxRaw = currentMouseX - x;
+          const dyRaw = currentMouseY - y;
+          const distRaw = Math.sqrt(dxRaw * dxRaw + dyRaw * dyRaw);
+
+          // Dynamic Spotlight Shape - ORGANIC & ASYMMETRIC
+          const angleToMouse = Math.atan2(dyRaw, dxRaw);
+
+          // Complex Organic Morphing for OUTER Spotlight
+          let shapeMod = 0;
+          shapeMod += Math.cos(angleToMouse * 2 + time * 0.5) * 60;
+          shapeMod += Math.sin(angleToMouse * 3 - time * 0.8) * 50;
+          shapeMod += Math.cos(angleToMouse * 5 + time * 1.5) * 30;
+          shapeMod += Math.sin(angleToMouse * 7 - time * 2.0) * 15;
+
+          // Breathing radius global
+          const radiusBreath = Math.sin(time * 1.5) * 40;
+
+          // Global Lung Expansion applied to spotlight size as well
+          const lungExpansion = lungBreath * 150;
+
+          const fadeRadius = 700 + shapeMod + radiusBreath + lungExpansion;
+          const cullRadius = fadeRadius + 100;
+
+          if (distRaw > cullRadius) continue;
+
+          // Heavy, Organic Breathing - NATURAL & ALIVE
+          const t = time * 0.6;
+          const noiseX = Math.sin(t + y * 0.05 + x * 0.01) * 20 + Math.cos(t * 0.3 + x * 0.02) * 15;
+          const noiseY = Math.cos(t + x * 0.05 + y * 0.01) * 20 + Math.sin(t * 0.4 + y * 0.02) * 15;
+
+          let drawX = x + noiseX;
+          let drawY = y + noiseY;
+
+          const breath = Math.sin(t * 3.0 + x * 0.005 + y * 0.005) * 0.5 + 0.5;
+          let radius = baseRadius + breath * 3;
+
+          // Recalculate distance for interaction based on the moved position
+          const dx = currentMouseX - drawX;
+          const dy = currentMouseY - drawY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          // Mouse Interaction
+          if (distance < fadeRadius) {
+            // Dynamic Repulsion Zone (The "dot free area")
+
+            const repulsionAngle = Math.atan2(dy, dx);
+
+            let repulsionShapeMod = 0;
+            repulsionShapeMod += Math.sin(time * 3.0) * 20;
+            repulsionShapeMod += Math.cos(repulsionAngle * 3 + time * 2.0) * 30;
+            repulsionShapeMod += Math.sin(repulsionAngle * 7 - time * 1.5) * 15;
+
+            // Base repulsion radius (the "empty" zone size)
+            // Increased to 80 (Middle ground)
+            const baseRepulsionRadius = 100 + lungBreath * 20;
+            const effectiveRepulsionRadius = baseRepulsionRadius + repulsionShapeMod;
+
+            // Repulsion Falloff Limit
+            const repulsionOuterRadius = 500; // Force drops to 0 at 400px
+
+            // Calculate force
+            let force = 0;
+            if (distance < effectiveRepulsionRadius) {
+              // Inside the organic hole: MAX force
+              force = 1.0;
+            } else if (distance < repulsionOuterRadius) {
+              // Outside hole but inside repulsion outer limit
+              const range = repulsionOuterRadius - effectiveRepulsionRadius;
+              const distFromHole = distance - effectiveRepulsionRadius;
+              force = Math.max(0, 1 - (distFromHole / range));
+              force = Math.pow(force, 2);
+            } else {
+              force = 0;
+            }
+
+            // Organic noise for the angle of displacement
+            const angleNoise = Math.sin(time * 2.0 + distance * 0.01) * 0.3;
+            const angle = Math.atan2(dy, dx) + angleNoise;
+
+            // Smooth but strong displacement
+            // Increased to 300 (Middle ground)
+            const moveDistance = force * 300;
+
+            if (moveDistance > 0) {
+              drawX -= Math.cos(angle) * moveDistance;
+              drawY -= Math.sin(angle) * moveDistance;
+            }
+
+            // Fade out at the edges of the spotlight
+            const alpha = Math.max(0, 1 - Math.pow(distRaw / fadeRadius, 8));
+            ctx.globalAlpha = alpha;
+          } else {
+            ctx.globalAlpha = 0;
+          }
+
+          // Text Interaction (Nextis Title) - SOLID FLOW
+          const titleElement = document.getElementById("nextis-title");
+          if (titleElement) {
+            const rect = titleElement.getBoundingClientRect();
+            const cushionBuffer = 10;
+
+            if (drawX > rect.left - cushionBuffer &&
+              drawX < rect.right + cushionBuffer &&
+              drawY > rect.top - cushionBuffer &&
+              drawY < rect.bottom + cushionBuffer) {
+
+              const bLeft = rect.left - cushionBuffer;
+              const bRight = rect.right + cushionBuffer;
+              const bTop = rect.top - cushionBuffer;
+              const bBottom = rect.bottom + cushionBuffer;
+
+              const dl = Math.abs(drawX - bLeft);
+              const dr = Math.abs(drawX - bRight);
+              const dt = Math.abs(drawY - bTop);
+              const db = Math.abs(drawY - bBottom);
+
+              const min = Math.min(dl, dr, dt, db);
+
+              if (min === dl) drawX = bLeft;
+              else if (min === dr) drawX = bRight;
+              else if (min === dt) drawY = bTop;
+              else if (min === db) drawY = bBottom;
+            }
+          }
+
+          ctx.beginPath();
+          ctx.arc(drawX, drawY, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1.0; // Reset alpha
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none bg-white"
+    />
+  );
+}
