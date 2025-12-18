@@ -19,12 +19,27 @@ export async function POST(request) {
 
         // Send email to the site owner (using the Verified Domain "onboarding@resend.dev" for testing if no domain set)
         // In production, user should set up their own domain in Resend
+        // 1. Send notification to developer
         await resend.emails.send({
             from: 'onboarding@resend.dev',
-            to: 'roberto@nextis.tech', // Sending to the owner 
+            to: 'robedela1@gmail.com',
             subject: 'New Waitlist Signup',
             html: `<p>New user joined the waitlist: <strong>${email}</strong></p>`
         });
+
+        // 2. Add to Resend Audience (Collection List)
+        // This allows you to see the list of emails in your Resend Dashboard > Audiences
+        if (process.env.RESEND_AUDIENCE_ID) {
+            try {
+                await resend.contacts.create({
+                    email: email,
+                    audienceId: process.env.RESEND_AUDIENCE_ID,
+                });
+            } catch (contactsError) {
+                console.error('Failed to add to contacts:', contactsError);
+                // Don't fail the request if just the contact add fails, the email notification still worked
+            }
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {
