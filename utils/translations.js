@@ -16,6 +16,11 @@ export const translations = {
             subtitle: "Join the waitlist and be the first to know when Nextis launches.",
             emailPlaceholder: "Enter your email",
             join: "Join",
+            waitlistTab: "Join Waitlist",
+            automateTab: "Automate a Task",
+            taskDescPlaceholder: "Describe the task you want to automate",
+            videoLinkPlaceholder: "Video link (YouTube, Drive, etc.) - optional",
+            submitAutomate: "Request Automation",
         },
         robot: {
             dof: "Degrees of Freedom",
@@ -47,6 +52,11 @@ export const translations = {
             subtitle: "Treten Sie der Warteliste bei und erfahren Sie als Erster, wenn Nextis startet.",
             emailPlaceholder: "Geben Sie Ihre E-Mail ein",
             join: "Beitreten",
+            waitlistTab: "Warteliste beitreten",
+            automateTab: "Aufgabe automatisieren",
+            taskDescPlaceholder: "Beschreiben Sie die Aufgabe, die Sie automatisieren möchten",
+            videoLinkPlaceholder: "Video-Link (YouTube, Drive, etc.) - optional",
+            submitAutomate: "Automatisierung anfragen",
         },
         robot: {
             dof: "Freiheitsgrade",

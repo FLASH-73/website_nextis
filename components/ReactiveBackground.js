@@ -106,6 +106,7 @@ export default function ReactiveBackground() {
           const lungExpansion = lungBreath * (150 * screenScale);
 
           // Increased Spotlight Size
+          // Increased to 1600 for wider visibility ("larger dot space")
           const fadeRadius = (1000 * screenScale) + shapeMod + radiusBreath + lungExpansion;
           const cullRadius = fadeRadius + 100;
 
@@ -145,7 +146,7 @@ export default function ReactiveBackground() {
 
             // Repulsion Falloff Limit
             // Increased to 800 for larger influence area
-            const repulsionOuterRadius = 800 * screenScale; 
+            const repulsionOuterRadius = 800 * screenScale;
 
             // Calculate force
             let force = 0;

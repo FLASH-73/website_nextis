@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
     try {
-        const { email } = await request.json();
+        const { email, taskDescription, videoLink } = await request.json();
 
         if (!email) {
             return NextResponse.json({ error: 'Email is required' }, { status: 400 });
@@ -13,18 +13,29 @@ export async function POST(request) {
 
         // If API key is not set, just log it (for dev/demo purposes)
         if (!process.env.RESEND_API_KEY) {
-            console.log('Waitlist Signup (Simulated):', email);
+            console.log('Waitlist Signup (Simulated):', { email, taskDescription, videoLink });
             return NextResponse.json({ success: true, message: 'Simulated signup successful' });
         }
 
-        // Send email to the site owner (using the Verified Domain "onboarding@resend.dev" for testing if no domain set)
-        // In production, user should set up their own domain in Resend
-        // 1. Send notification to developer
+        // Send email to the site owner
+        let htmlContent = `<p>New user joined the waitlist: <strong>${email}</strong></p>`;
+
+        if (taskDescription) {
+            htmlContent += `
+                <h3>Automation Request</h3>
+                <p><strong>Task Description:</strong><br/>${taskDescription.replace(/\n/g, '<br/>')}</p>
+            `;
+        }
+
+        if (videoLink) {
+            htmlContent += `<p><strong>Video Link:</strong> <a href="${videoLink}">${videoLink}</a></p>`;
+        }
+
         await resend.emails.send({
             from: 'onboarding@resend.dev',
             to: 'robedela1@gmail.com',
-            subject: 'New Waitlist Signup',
-            html: `<p>New user joined the waitlist: <strong>${email}</strong></p>`
+            subject: taskDescription ? 'New Automation Request' : 'New Waitlist Signup',
+            html: htmlContent
         });
 
         // 2. Add to Resend Audience (Collection List)
