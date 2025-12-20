@@ -110,7 +110,7 @@ export default function Contact() {
                 </form>
 
                 <div className="mt-16 text-sm text-gray-400">
-                    &copy; {new Date().getFullYear()} Nextis. All rights reserved.
+                    {new Date().getFullYear()} Nextis
                 </div>
             </div>
         </section>

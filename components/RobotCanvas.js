@@ -95,20 +95,20 @@ export default function RobotCanvas({ onClose }) {
       <Loader />
 
       <div className="relative w-full px-8 pt-24 pb-4 order-1 md:order-none md:absolute md:top-1/3 md:left-1/3 md:-translate-y-1/2 md:p-0 md:w-auto z-40 pointer-events-none">
-        <div className="space-y-6 md:space-y-10 text-gray-900">
+        <div className="space-y-6 md:space-y-10 text-gray-900 text-center">
           <div>
             <h3 className="uppercase tracking-widest text-gray-500 mb-2" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.dof}</h3>
             <p className="font-light" style={{ fontSize: 'clamp(1.5rem, 1.3vw, 3rem)' }}>7 DoF</p>
           </div>
 
-          <div>
+          <div className="flex flex-col items-center">
             <h3 className="uppercase tracking-widest text-gray-500 mb-2" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.payload}</h3>
             <div className="flex gap-10">
-              <div>
+              <div className="text-center">
                 <p className="font-light" style={{ fontSize: 'clamp(1.25rem, 1vw, 2.25rem)' }}>6 kg</p>
                 <span className="text-gray-500" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 0.875rem)' }}>{t.robot.peak}</span>
               </div>
-              <div>
+              <div className="text-center">
                 <p className="font-light" style={{ fontSize: 'clamp(1.25rem, 1vw, 2.25rem)' }}>3 kg</p>
                 <span className="text-gray-500" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 0.875rem)' }}>{t.robot.rated}</span>
               </div>
@@ -129,7 +129,7 @@ export default function RobotCanvas({ onClose }) {
       </div>
 
       <div className="relative pb-12 order-3 md:order-none md:absolute md:bottom-12 md:pb-0 text-center pointer-events-none w-full">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Nextis Arm One</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Nextis Constructor One</h2>
         <p className="text-gray-600">{t.robot.controls}</p>
       </div>
     </div>
