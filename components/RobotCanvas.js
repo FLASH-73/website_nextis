@@ -70,7 +70,7 @@ export default function RobotCanvas({ onClose }) {
   const { t } = useLanguage();
 
   return (
-    <div className="fixed inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center font-original">
+    <div className="fixed inset-0 z-50 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-start md:justify-center font-original overflow-y-auto md:overflow-hidden">
       <div className="absolute top-8 right-8 z-50">
         <button
           onClick={onClose}
@@ -80,7 +80,7 @@ export default function RobotCanvas({ onClose }) {
         </button>
       </div>
 
-      <div className="absolute right-0 w-2/3 h-full">
+      <div className="relative w-full h-[50vh] order-2 md:order-none md:absolute md:right-0 md:w-2/3 md:h-full md:top-0">
         <Canvas shadows camera={{ position: [0, 2, 8], fov: 45 }}>
           <Suspense fallback={null}>
             <Stage environment="city" intensity={0.5} adjustCamera={1.5}>
@@ -94,7 +94,7 @@ export default function RobotCanvas({ onClose }) {
       </div>
       <Loader />
 
-      <div className="absolute top-1/3 left-1/3 -translate-y-1/2 z-40 pointer-events-none">
+      <div className="relative w-full px-8 pt-24 pb-4 order-1 md:order-none md:absolute md:top-1/3 md:left-1/3 md:-translate-y-1/2 md:p-0 md:w-auto z-40 pointer-events-none">
         <div className="space-y-6 md:space-y-10 text-gray-900">
           <div>
             <h3 className="uppercase tracking-widest text-gray-500 mb-2" style={{ fontSize: 'clamp(0.75rem, 0.4vw, 1rem)' }}>{t.robot.dof}</h3>
@@ -128,7 +128,7 @@ export default function RobotCanvas({ onClose }) {
         </div>
       </div>
 
-      <div className="absolute bottom-12 text-center pointer-events-none w-full">
+      <div className="relative pb-12 order-3 md:order-none md:absolute md:bottom-12 md:pb-0 text-center pointer-events-none w-full">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Nextis Arm One</h2>
         <p className="text-gray-600">{t.robot.controls}</p>
       </div>

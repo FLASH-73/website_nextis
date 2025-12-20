@@ -141,7 +141,10 @@ export default function ReactiveBackground() {
 
             // Base repulsion radius (the "empty" zone size)
             // Increased to 180 for larger empty space
-            const baseRepulsionRadius = (180 * screenScale) + lungBreath * (20 * screenScale);
+            // Reduce by 40% on mobile (< 768px width) to keep the hole from being overwhelming
+            const isMobile = canvas.width < 768;
+            const mobileRepulsionFactor = isMobile ? 0.6 : 1.0;
+            const baseRepulsionRadius = ((180 * mobileRepulsionFactor) * screenScale) + lungBreath * (20 * screenScale);
             const effectiveRepulsionRadius = baseRepulsionRadius + repulsionShapeMod;
 
             // Repulsion Falloff Limit
