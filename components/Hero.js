@@ -26,9 +26,8 @@ export default function Hero() {
                 <h1 id="nextis-title" className="inline-block font-sans font-light tracking-tighter leading-none text-gray-900 mb-6" style={{ fontSize: 'clamp(3rem, 2.5vw, 6rem)' }}>
                     Nextis
                 </h1>
-                <p className="text-gray-600 font-light mb-10 max-w-2xl mx-auto leading-relaxed" style={{ fontSize: 'clamp(1rem, 0.7vw, 1.5rem)' }}>
-                    {t.hero.title} <br />
-                    <span className="font-medium text-gray-900">{t.hero.subtitle}</span>
+                <p className="text-gray-600 font-light mb-10 max-w-2xl mx-auto leading-relaxed" style={{ fontSize: 'clamp(1rem, 1vw, 1.35rem)' }}>
+                    {t.hero.subtitle}
                 </p>
 
                 <div className="flex flex-col items-center gap-4">

@@ -1,15 +1,23 @@
 export const translations = {
     en: {
         hero: {
-            title: "The future of automation is here.",
-            subtitle: "AI-enabled robotic arms for assembly, sorting, and beyond.",
+            subtitle: "Machines that assemble. Teach once, run forever.",
             discover: "Discover the Arm",
             watch: "Watch Demo",
             waitlistMessage: "Working hard on it. Join waitlist to be the first who knows.",
         },
-        about: {
-            title: "Our Mission",
-            description: "At Nextis, we believe that robotics should be accessible to everyone. We are building the next generation of intelligent robotic arms that can see, learn, and adapt to any environment. Whether you are a small business automating a workshop or a researcher pushing the boundaries of AI, Nextis is for you.",
+        problem: {
+            text1: "Assembly is still done by hand. Millions of products, wired, screwed, and glued together by human workers on factory lines. It's slow. It's expensive. And it doesn't scale.",
+            text2: "Traditional robots can't help. They need months of programming for each new task. Change the product, start over.",
+        },
+        product: {
+            text1: "The Nextis assembly system watches a human do a task, then does it autonomously. New product? New demonstration. Setup takes days, not months.",
+            text2: "Dual-arm. Vision-guided. Learns from demonstration.",
+        },
+        vision: {
+            text1: "Turing proved one machine could perform any computation. We built the personal computer.",
+            text2: "Von Neumann proved one machine could build any physical object. We're building that machine.",
+            manifesto: "Read the manifesto \u2192",
         },
         contact: {
             title: "Ready to automate?",
@@ -30,22 +38,30 @@ export const translations = {
             reach: "Reach",
             gripper: "Gripper",
             gripperType: "Adaptive Soft Gripper",
-            gripperDetails: "Visual force feedback • 90mm span",
+            gripperDetails: "Visual force feedback \u2022 90mm span",
             close: "Close Interaction",
-            controls: "Drag to rotate view • Scroll to zoom",
+            controls: "Drag to rotate view \u2022 Scroll to zoom",
         },
     },
     de: {
         hero: {
-            title: "Die Zukunft der Automatisierung ist hier.",
-            subtitle: "KI-gestützte Roboterarme für Montage, Sortierung und mehr.",
+            subtitle: "Maschinen, die montieren. Einmal zeigen, f\u00fcr immer fertigen.",
             discover: "Entdecke den Arm",
             watch: "Demo ansehen",
-            waitlistMessage: "Wir arbeiten hart daran. Melden Sie sich für die Warteliste an, um als Erster davon zu erfahren.",
+            waitlistMessage: "Wir arbeiten hart daran. Melden Sie sich f\u00fcr die Warteliste an, um als Erster davon zu erfahren.",
         },
-        about: {
-            title: "Unsere Mission",
-            description: "Bei Nextis glauben wir, dass Robotik für jeden zugänglich sein sollte. Wir bauen die nächste Generation intelligenter Roboterarme, die sehen, lernen und sich an jede Umgebung anpassen können. Egal, ob Sie ein kleines Unternehmen sind, das eine Werkstatt automatisiert, oder ein Forscher, der die Grenzen der KI erweitert, Nextis ist für Sie.",
+        problem: {
+            text1: "Montage wird immer noch von Hand gemacht. Millionen von Produkten, verdrahtet, verschraubt und verklebt von menschlichen Arbeitern am Flie\u00dfband. Es ist langsam. Es ist teuer. Und es skaliert nicht.",
+            text2: "Herk\u00f6mmliche Roboter k\u00f6nnen nicht helfen. Sie brauchen Monate an Programmierung f\u00fcr jede neue Aufgabe. Produkt \u00e4ndern, von vorne anfangen.",
+        },
+        product: {
+            text1: "Das Nextis-Montagesystem beobachtet einen Menschen bei einer Aufgabe und f\u00fchrt sie dann autonom aus. Neues Produkt? Neue Demonstration. Die Einrichtung dauert Tage, nicht Monate.",
+            text2: "Zwei Arme. Visionsgesteuert. Lernt durch Demonstration.",
+        },
+        vision: {
+            text1: "Turing bewies, dass eine Maschine jede Berechnung ausf\u00fchren kann. Wir bauten den Personal Computer.",
+            text2: "Von Neumann bewies, dass eine Maschine jedes physische Objekt bauen kann. Wir bauen diese Maschine.",
+            manifesto: "Manifest lesen \u2192",
         },
         contact: {
             title: "Bereit zu automatisieren?",
@@ -54,7 +70,7 @@ export const translations = {
             join: "Beitreten",
             waitlistTab: "Warteliste beitreten",
             automateTab: "Aufgabe automatisieren",
-            taskDescPlaceholder: "Beschreiben Sie die Aufgabe, die Sie automatisieren möchten",
+            taskDescPlaceholder: "Beschreiben Sie die Aufgabe, die Sie automatisieren m\u00f6chten",
             videoLinkPlaceholder: "Video-Link (YouTube, Drive, etc.) - optional",
             submitAutomate: "Automatisierung anfragen",
         },
@@ -66,9 +82,9 @@ export const translations = {
             reach: "Reichweite",
             gripper: "Greifer",
             gripperType: "Adaptiver Soft-Greifer",
-            gripperDetails: "Visuelles Kraft Feedback • 90mm Spannweite",
-            close: "Interaktion schließen",
-            controls: "Ziehen zum Drehen • Scrollen zum Zoomen",
+            gripperDetails: "Visuelles Kraft Feedback \u2022 90mm Spannweite",
+            close: "Interaktion schlie\u00dfen",
+            controls: "Ziehen zum Drehen \u2022 Scrollen zum Zoomen",
         },
     },
 };
