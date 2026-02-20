@@ -1,10 +1,26 @@
 export const translations = {
     en: {
+        nav: {
+            openMenu: "Open menu",
+            skipToContent: "Skip to content",
+        },
+        forms: {
+            emailLabel: "Email address",
+            taskDescLabel: "Task description",
+            videoLinkLabel: "Video link",
+            invalidEmail: "Please enter a valid email address.",
+            submitting: "Processing...",
+        },
+        notFound: {
+            title: "Page not found",
+            text: "The page you're looking for doesn't exist or has been moved.",
+            goHome: "Go home",
+        },
         hero: {
             subtitle: "Machines that assemble. Teach once, run forever.",
             discover: "Discover the Arm",
-            watch: "Watch Demo",
-            waitlistMessage: "Working hard on it. Join waitlist to be the first who knows.",
+            earlyAccess: "Get Early Access",
+            waitlistMessage: "We're building something new. Leave your email and we'll reach out when it's ready.",
         },
         problem: {
             text1: "Assembly is still done by hand. Millions of products, wired, screwed, and glued together by human workers on factory lines. It's slow. It's expensive. And it doesn't scale.",
@@ -18,6 +34,11 @@ export const translations = {
             text1: "Turing proved one machine could perform any computation. We built the personal computer.",
             text2: "Von Neumann proved one machine could build any physical object. We're building that machine.",
             manifesto: "Read the manifesto \u2192",
+        },
+        xfeed: {
+            title: "From the Workshop",
+            subtitle: "Daily updates on building the universal constructor.",
+            follow: "Follow @robertorobotics on X \u2192",
         },
         contact: {
             title: "Ready to automate?",
@@ -44,11 +65,27 @@ export const translations = {
         },
     },
     de: {
+        nav: {
+            openMenu: "Men\u00fc \u00f6ffnen",
+            skipToContent: "Zum Inhalt springen",
+        },
+        forms: {
+            emailLabel: "E-Mail-Adresse",
+            taskDescLabel: "Aufgabenbeschreibung",
+            videoLinkLabel: "Video-Link",
+            invalidEmail: "Bitte geben Sie eine g\u00fcltige E-Mail-Adresse ein.",
+            submitting: "Verarbeitung...",
+        },
+        notFound: {
+            title: "Seite nicht gefunden",
+            text: "Die Seite, die Sie suchen, existiert nicht oder wurde verschoben.",
+            goHome: "Zur Startseite",
+        },
         hero: {
             subtitle: "Maschinen, die montieren. Einmal zeigen, f\u00fcr immer fertigen.",
             discover: "Entdecke den Arm",
-            watch: "Demo ansehen",
-            waitlistMessage: "Wir arbeiten hart daran. Melden Sie sich f\u00fcr die Warteliste an, um als Erster davon zu erfahren.",
+            earlyAccess: "Fr\u00fchzugang erhalten",
+            waitlistMessage: "Wir bauen etwas Neues. Hinterlassen Sie Ihre E-Mail und wir melden uns, wenn es fertig ist.",
         },
         problem: {
             text1: "Montage wird immer noch von Hand gemacht. Millionen von Produkten, verdrahtet, verschraubt und verklebt von menschlichen Arbeitern am Flie\u00dfband. Es ist langsam. Es ist teuer. Und es skaliert nicht.",
@@ -62,6 +99,11 @@ export const translations = {
             text1: "Turing bewies, dass eine Maschine jede Berechnung ausf\u00fchren kann. Wir bauten den Personal Computer.",
             text2: "Von Neumann bewies, dass eine Maschine jedes physische Objekt bauen kann. Wir bauen diese Maschine.",
             manifesto: "Manifest lesen \u2192",
+        },
+        xfeed: {
+            title: "Aus der Werkstatt",
+            subtitle: "T\u00e4gliche Updates zum Bau des universellen Konstruktors.",
+            follow: "Folge @robertorobotics auf X \u2192",
         },
         contact: {
             title: "Bereit zu automatisieren?",

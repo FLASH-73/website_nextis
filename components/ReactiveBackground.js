@@ -11,6 +11,38 @@ export default function ReactiveBackground() {
 
     const ctx = canvas.getContext("2d");
     let animationFrameId;
+    let isVisible = true;
+
+    // Cached title bounding rect (updated on resize/scroll, not every frame)
+    let titleRect = null;
+    let debounceTimer = null;
+
+    const updateTitleRect = () => {
+      const el = document.getElementById("nextis-title");
+      if (el) {
+        titleRect = el.getBoundingClientRect();
+      }
+    };
+
+    const debouncedUpdateTitleRect = () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(updateTitleRect, 100);
+    };
+
+    // Initial measurement
+    updateTitleRect();
+
+    // IntersectionObserver for viewport culling
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.intersectionRatio > 0;
+        if (isVisible && !animationFrameId) {
+          render();
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
 
     // Mouse state
     let targetMouseX = -1000;
@@ -21,6 +53,7 @@ export default function ReactiveBackground() {
     const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      updateTitleRect();
     };
 
     const handleMouseMove = (e) => {
@@ -39,6 +72,7 @@ export default function ReactiveBackground() {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("touchmove", handleTouchMove);
     window.addEventListener("touchstart", handleTouchMove);
+    window.addEventListener("scroll", debouncedUpdateTitleRect, { passive: true });
 
     handleResize();
 
@@ -113,14 +147,14 @@ export default function ReactiveBackground() {
           if (distRaw > cullRadius) continue;
 
           // Heavy, Organic Breathing - NATURAL & ALIVE
-          const t = time * 0.6;
-          const noiseX = Math.sin(t + y * 0.05 + x * 0.01) * (20 * screenScale) + Math.cos(t * 0.3 + x * 0.02) * (15 * screenScale);
-          const noiseY = Math.cos(t + x * 0.05 + y * 0.01) * (20 * screenScale) + Math.sin(t * 0.4 + y * 0.02) * (15 * screenScale);
+          const slowTime = time * 0.6;
+          const noiseX = Math.sin(slowTime + y * 0.05 + x * 0.01) * (20 * screenScale) + Math.cos(slowTime * 0.3 + x * 0.02) * (15 * screenScale);
+          const noiseY = Math.cos(slowTime + x * 0.05 + y * 0.01) * (20 * screenScale) + Math.sin(slowTime * 0.4 + y * 0.02) * (15 * screenScale);
 
           let drawX = x + noiseX;
           let drawY = y + noiseY;
 
-          const breath = Math.sin(t * 3.0 + x * 0.005 + y * 0.005) * 0.5 + 0.5;
+          const breath = Math.sin(slowTime * 3.0 + x * 0.005 + y * 0.005) * 0.5 + 0.5;
           let radius = baseRadius + breath * (3 * screenScale);
 
           // Recalculate distance for interaction based on the moved position
@@ -187,9 +221,8 @@ export default function ReactiveBackground() {
           }
 
           // Text Interaction (Nextis Title) - SOLID FLOW
-          const titleElement = document.getElementById("nextis-title");
-          if (titleElement) {
-            const rect = titleElement.getBoundingClientRect();
+          if (titleRect) {
+            const rect = titleRect;
             // Scale the cushion buffer with the screen size so it stays tight to the text
             // Reduced to 2 for tighter fit
             const cushionBuffer = 2 * screenScale;
@@ -225,7 +258,11 @@ export default function ReactiveBackground() {
       }
       ctx.globalAlpha = 1.0; // Reset alpha
 
-      animationFrameId = requestAnimationFrame(render);
+      if (isVisible) {
+        animationFrameId = requestAnimationFrame(render);
+      } else {
+        animationFrameId = null;
+      }
     };
 
     render();
@@ -235,6 +272,9 @@ export default function ReactiveBackground() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchstart", handleTouchMove);
+      window.removeEventListener("scroll", debouncedUpdateTitleRect);
+      clearTimeout(debounceTimer);
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
