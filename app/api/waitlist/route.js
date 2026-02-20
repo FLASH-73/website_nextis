@@ -1,8 +1,16 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function sanitizeHtml(str) {
+    return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
 
+// TODO: Add rate limiting before significant traffic (e.g., @upstash/ratelimit)
 export async function POST(request) {
     try {
         const { email, taskDescription, videoLink } = await request.json();
@@ -17,29 +25,40 @@ export async function POST(request) {
             return NextResponse.json({ success: true, message: 'Simulated signup successful' });
         }
 
-        // Send email to the site owner
-        let htmlContent = `<p>New user joined the waitlist: <strong>${email}</strong></p>`;
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const notifyEmail = process.env.NOTIFY_EMAIL;
+        if (!notifyEmail) {
+            console.warn('NOTIFY_EMAIL is not set. Skipping email notification.');
+            return NextResponse.json({ success: true, message: 'Signup recorded (email notification skipped)' });
+        }
 
-        if (taskDescription) {
+        // Sanitize user inputs before inserting into HTML
+        const safeEmail = sanitizeHtml(email);
+        const safeTaskDescription = taskDescription ? sanitizeHtml(taskDescription) : null;
+        const safeVideoLink = videoLink ? sanitizeHtml(videoLink) : null;
+
+        // Send email to the site owner
+        let htmlContent = `<p>New user joined the waitlist: <strong>${safeEmail}</strong></p>`;
+
+        if (safeTaskDescription) {
             htmlContent += `
                 <h3>Automation Request</h3>
-                <p><strong>Task Description:</strong><br/>${taskDescription.replace(/\n/g, '<br/>')}</p>
+                <p><strong>Task Description:</strong><br/>${safeTaskDescription.replace(/\n/g, '<br/>')}</p>
             `;
         }
 
-        if (videoLink) {
-            htmlContent += `<p><strong>Video Link:</strong> <a href="${videoLink}">${videoLink}</a></p>`;
+        if (safeVideoLink) {
+            htmlContent += `<p><strong>Video Link:</strong> <a href="${safeVideoLink}">${safeVideoLink}</a></p>`;
         }
 
         await resend.emails.send({
             from: 'onboarding@resend.dev',
-            to: 'robedela1@gmail.com',
+            to: notifyEmail,
             subject: taskDescription ? 'New Automation Request' : 'New Waitlist Signup',
             html: htmlContent
         });
 
-        // 2. Add to Resend Audience (Collection List)
-        // This allows you to see the list of emails in your Resend Dashboard > Audiences
+        // Add to Resend Audience (Collection List)
         if (process.env.RESEND_AUDIENCE_ID) {
             try {
                 await resend.contacts.create({
@@ -48,7 +67,6 @@ export async function POST(request) {
                 });
             } catch (contactsError) {
                 console.error('Failed to add to contacts:', contactsError);
-                // Don't fail the request if just the contact add fails, the email notification still worked
             }
         }
 
