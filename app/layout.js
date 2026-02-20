@@ -1,31 +1,50 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { ToastProvider } from "@/contexts/ToastContext";
+import Navigation from "@/components/Navigation";
+import Toast from "@/components/Toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata = {
-  title: "Nextis | AI-Enabled Robotic Arms",
-  description: "Advanced robotic arms for assembly and sorting. AI-enabled, accessible, and powerful.",
+  title: "Nextis — Building the Universal Constructor",
+  description: "Autonomous robotic assembly. Teach a task once, run it forever. Dual-arm, vision-guided, learns from demonstration.",
+  metadataBase: new URL("https://website-nextis.vercel.app"),
+  openGraph: {
+    title: "Nextis — Building the Universal Constructor",
+    description: "Autonomous robotic assembly. Teach a task once, run it forever.",
+    url: "https://website-nextis.vercel.app",
+    siteName: "Nextis",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nextis — Building the Universal Constructor",
+    description: "Autonomous robotic assembly. Teach a task once, run it forever.",
+  },
+  robots: { index: true, follow: true },
 };
-
-import { LanguageProvider } from "@/contexts/LanguageContext";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} antialiased`}
       >
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <LanguageProvider>
-          {children}
+          <ToastProvider>
+            <Navigation />
+            {children}
+            <Toast />
+          </ToastProvider>
         </LanguageProvider>
       </body>
     </html>
