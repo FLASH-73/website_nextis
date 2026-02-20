@@ -1,7 +1,8 @@
+import { post as universalConstructionCell } from "./the-universal-construction-cell";
 import { post as universalConstructor } from "./the-universal-constructor";
 
 // Add new posts here. Newest first.
-const posts = [universalConstructor];
+const posts = [universalConstructionCell, universalConstructor];
 
 export function getAllPosts() {
     return [...posts].sort(

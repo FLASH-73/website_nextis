@@ -10,6 +10,26 @@ export function renderBlock(block, index) {
                     {block.text}
                 </h1>
             );
+        case "heading":
+            return (
+                <h2
+                    key={index}
+                    className="font-medium tracking-tight text-gray-900 mt-16 mb-6"
+                    style={{ fontSize: "var(--text-section-title)" }}
+                >
+                    {block.text}
+                </h2>
+            );
+        case "subheading":
+            return (
+                <h3
+                    key={index}
+                    className="font-medium text-gray-900 mt-10 mb-4"
+                    style={{ fontSize: "var(--text-body-lg)" }}
+                >
+                    {block.text}
+                </h3>
+            );
         case "paragraph":
             return (
                 <p
