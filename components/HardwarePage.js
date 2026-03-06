@@ -44,7 +44,6 @@ export default function HardwarePage() {
         const form = e.target;
         const email = form.email.value;
         const name = form.name.value;
-        const useCase = form.useCase.value;
         const country = form.country.value;
 
         if (!EMAIL_REGEX.test(email)) {
@@ -57,7 +56,7 @@ export default function HardwarePage() {
             const res = await fetch("/api/hardware-request", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, email, useCase, country }),
+                body: JSON.stringify({ name, email, country }),
             });
 
             if (res.ok) {
@@ -305,13 +304,6 @@ export default function HardwarePage() {
                             required
                             placeholder={t.hardware.emailPlaceholder}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all bg-white"
-                            style={{ fontSize: "var(--text-body)" }}
-                        />
-                        <textarea
-                            name="useCase"
-                            rows={3}
-                            placeholder={t.hardware.useCasePlaceholder}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all bg-white resize-none"
                             style={{ fontSize: "var(--text-body)" }}
                         />
                         <input
