@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 public/models/*.obj
 public/models/*.mtl
+
+# raw source assets
+/images/

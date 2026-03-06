@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/contexts/ToastContext";
+import HeroVideo from "./HeroVideo";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -23,21 +23,6 @@ export default function HardwarePage() {
     const { t } = useLanguage();
     const { showToast } = useToast();
     const [submitting, setSubmitting] = useState(false);
-    const [activeSlide, setActiveSlide] = useState(0);
-    const galleryRef = useRef(null);
-
-    const handleScroll = useCallback(() => {
-        const el = galleryRef.current;
-        if (!el) return;
-        const index = Math.round(el.scrollLeft / el.offsetWidth);
-        setActiveSlide(index);
-    }, []);
-
-    function scrollToSlide(index) {
-        const el = galleryRef.current;
-        if (!el) return;
-        el.scrollTo({ left: index * el.offsetWidth, behavior: "smooth" });
-    }
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -100,6 +85,13 @@ export default function HardwarePage() {
                     <p className="mt-2 text-gray-500 text-sm">
                         {t.hardware.priceNote}
                     </p>
+
+                    <p
+                        className="mt-4 text-gray-600 font-light"
+                        style={{ fontSize: "var(--text-body-lg)" }}
+                    >
+                        {t.hardware.framingLine}
+                    </p>
                     <p
                         className="mt-8 text-gray-600 font-light"
                         style={{ fontSize: "var(--text-body-lg)" }}
@@ -109,57 +101,21 @@ export default function HardwarePage() {
                 </motion.div>
             </section>
 
-            {/* Gallery */}
-            <section className="bg-white pb-16">
+            {/* Video */}
+            <section className="bg-white pb-8">
                 <div className="max-w-4xl mx-auto px-6">
-                    <div
-                        ref={galleryRef}
-                        onScroll={handleScroll}
-                        className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth"
-                        style={{
-                            scrollbarWidth: "none",
-                            msOverflowStyle: "none",
-                            WebkitOverflowScrolling: "touch",
-                        }}
+                    <HeroVideo />
+                    <p
+                        className="text-center text-gray-400 mt-3"
+                        style={{ fontSize: "var(--text-body)" }}
                     >
-                        <div className="snap-center shrink-0 w-full">
-                            <Image
-                                src="/images/hardware/aira-in-action.webp"
-                                alt="AIRA follower arm and leader arm on workbench"
-                                width={1600}
-                                height={1156}
-                                className="w-full rounded-lg"
-                                sizes="(max-width: 768px) 100vw, 1024px"
-                                priority
-                            />
-                        </div>
-                        <div className="snap-center shrink-0 w-full">
-                            <Image
-                                src="/images/hardware/aira-follower.webp"
-                                alt="AIRA follower arm close-up showing actuators and gripper"
-                                width={1290}
-                                height={1705}
-                                className="w-full rounded-lg"
-                                sizes="(max-width: 768px) 100vw, 1024px"
-                            />
-                        </div>
-                    </div>
-                    <div className="flex justify-center gap-2 mt-4">
-                        {[0, 1].map((i) => (
-                            <button
-                                key={i}
-                                onClick={() => scrollToSlide(i)}
-                                aria-label={`Go to image ${i + 1}`}
-                                className={`w-2 h-2 rounded-full transition-colors ${
-                                    activeSlide === i
-                                        ? "bg-gray-900"
-                                        : "bg-gray-300"
-                                }`}
-                            />
-                        ))}
-                    </div>
-                    <p className="text-center text-gray-400 mt-3 text-sm">
                         {t.hardware.galleryCaption}
+                    </p>
+                    <p
+                        className="text-center text-gray-400 mt-6 max-w-2xl mx-auto"
+                        style={{ fontSize: "var(--text-body)" }}
+                    >
+                        {t.hardware.socialProof}
                     </p>
                 </div>
             </section>
@@ -269,6 +225,12 @@ export default function HardwarePage() {
                     >
                         {t.hardware.whoDesc}
                     </p>
+                    <p
+                        className="mt-4 text-gray-700 font-light max-w-2xl mx-auto leading-relaxed"
+                        style={{ fontSize: "var(--text-body-lg)" }}
+                    >
+                        {t.hardware.whoDescNote}
+                    </p>
                 </div>
             </section>
 
@@ -316,6 +278,7 @@ export default function HardwarePage() {
                         <button
                             type="submit"
                             disabled={submitting}
+                            aria-label={t.hardware.submit}
                             className="w-full px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {submitting ? t.forms.submitting : t.hardware.submit}
